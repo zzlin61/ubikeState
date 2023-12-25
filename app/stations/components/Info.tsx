@@ -9,10 +9,8 @@ interface InfoProps {
 const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
   const [bikeData, setBikeData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [sortBy, setSortBy] = useState(""); // "sbi" or "bemp"
-  const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
 
   const url =
     "https://tcgbusfs.blob.core.windows.net/dotapp/youbike/v2/youbike_immediate.json";
@@ -45,28 +43,18 @@ const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
       }
     });
 
-  // Paginate the data
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredBikeData.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
   const handleSort = (field: string) => {
     setSortBy(field);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
   return (
-    <div>
+    <div className="px-10">
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div>
-          <table className="w-full  table-auto border-collapse">
+          <table className="w-full table-auto border-separate border-spacing-0 rounded-[2rem] border mb-10 ">
             <thead className="bg-green-500 text-white">
               <tr>
                 <th
@@ -97,37 +85,37 @@ const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((bike) => (
+              {filteredBikeData.map((bike, index) => (
                 <tr
                   key={bike.sno}
-                  className="text-center even:bg-gray-100 odd:bg-white"
+                  className="text-center 
+                     even:bg-gray-100 odd:bg-white"
                 >
-                  <td className="p-5">台北市</td>
+                  <td
+                    className={`p-5  ${
+                      index === filteredBikeData.length - 1
+                        ? "rounded-bl-[2rem]"
+                        : ""
+                    }`}
+                  >
+                    台北市
+                  </td>
                   <td className="p-5">{bike.sarea}</td>
                   <td className="p-5">{bike.sna}</td>
                   <td className="p-5 text-green-500">{bike.sbi}</td>
-                  <td className="p-5 text-green-500">{bike.bemp}</td>
+                  <td
+                    className={`p-5 text-green-500 ${
+                      index === filteredBikeData.length - 1
+                        ? "rounded-br-[2rem]"
+                        : ""
+                    }`}
+                  >
+                    {bike.bemp}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          {/* Pagination */}
-          <div>
-            <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Previous Page
-            </button>
-            <span>{currentPage}</span>
-            <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={indexOfLastItem >= filteredBikeData.length}
-            >
-              Next Page
-            </button>
-          </div>
         </div>
       )}
     </div>
