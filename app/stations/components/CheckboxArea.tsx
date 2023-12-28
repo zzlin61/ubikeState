@@ -6,23 +6,27 @@ interface CheckboxAreaProps {
   selectedCity: string | null;
   onSelectedAreasChange: (areas: string[]) => void;
   areaData: AreaData;
+  selectedSearchCity?: string | null;
 }
 
 const CheckboxArea: React.FC<CheckboxAreaProps> = ({
   selectedCity,
   onSelectedAreasChange,
   areaData,
+  selectedSearchCity,
 }) => {
   const [areas, setAreas] = useState<string[]>([]);
-  const [selectAll, setSelectAll] = useState<boolean>(true); // Set to true initially
+  const [selectAll, setSelectAll] = useState(true);
 
   useEffect(() => {
-    if (selectedCity) {
-      setAreas(areaData[selectedCity] || []);
+    const currentCity = selectedSearchCity || selectedCity;
+
+    if (currentCity) {
+      setAreas(areaData[currentCity] || []);
     } else {
       setAreas([]);
     }
-  }, [selectedCity, areaData]);
+  }, [selectedCity, selectedSearchCity, areaData]);
 
   const handleCheckboxChange = (area: string) => {
     const updatedAreas = areas.includes(area)
@@ -34,7 +38,7 @@ const CheckboxArea: React.FC<CheckboxAreaProps> = ({
   };
 
   const handleSelectAllChange = () => {
-    const allAreas = areaData[selectedCity || ""] || [];
+    const allAreas = areaData[selectedCity || selectedSearchCity || ""] || [];
     const updatedAreas = selectAll ? [] : [...allAreas];
 
     setAreas(updatedAreas);
@@ -43,20 +47,21 @@ const CheckboxArea: React.FC<CheckboxAreaProps> = ({
   };
 
   return (
-    <div>
+    <div className="mb-10">
       <div className="mb-5 pl-10">
         <input
           type="checkbox"
           id="selectAll"
           checked={selectAll}
           onChange={handleSelectAllChange}
+          className="accent-greenery "
         />
         <label htmlFor="selectAll">全部勾選</label>
       </div>
 
-      {selectedCity && (
-        <div className="flex w-1/3 flex-wrap gap-7 mt-5 pl-10">
-          {areaData[selectedCity].map((area) => (
+      {(selectedCity || selectedSearchCity) && (
+        <div className="flex  flex-wrap gap-7 mt-5 pl-10 md:w-3/4">
+          {(areaData[selectedCity || selectedSearchCity] || []).map((area) => (
             <div key={area} className="flex items-center ">
               <input
                 type="checkbox"
@@ -64,6 +69,7 @@ const CheckboxArea: React.FC<CheckboxAreaProps> = ({
                 value={area}
                 checked={areas.includes(area)}
                 onChange={() => handleCheckboxChange(area)}
+                className="accent-greenery"
               />
               <label htmlFor={area}>{area}</label>
             </div>

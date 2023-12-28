@@ -1,47 +1,39 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
+import { FaSearch } from "react-icons/fa";
 
 interface SearchProps {
+  taiwanCities: string[];
   areaData: { [key: string]: string[] };
-  onSelectCity: (city: string) => void;
+  onSearch: (searchResults: string) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ areaData, onSelectCity }) => {
+const Search: React.FC<SearchProps> = ({
+  taiwanCities,
+  areaData,
+  onSearch,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<string[]>([]);
 
   useEffect(() => {
-    const results = Object.keys(areaData).filter((city) =>
+    const results = taiwanCities.filter((city) =>
       city.includes(searchQuery.trim())
     );
-    setSearchResults(results);
-  }, [searchQuery, areaData]);
-
-  const handleSelectCity = (city: string) => {
-    setSearchQuery("");
-    onSelectCity(city);
-  };
+    onSearch(results);
+  }, [searchQuery]);
 
   return (
-    <div className="mb-5 pl-10">
-      <p>搜尋城市：</p>
-      <input
-        type="text"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-
-      <div className="mt-3">
-        {searchResults.map((city) => (
-          <div key={city} className="flex items-center">
-            <input
-              type="checkbox"
-              id={city}
-              defaultChecked={false}
-              onChange={() => handleSelectCity(city)}
-            />
-            <label htmlFor={city}>{city}</label>
-          </div>
-        ))}
+    <div className="mb-5 w-full md:w-1/2">
+      <div className="px-2 py-[0.35rem] bg-slate-100 border rounded-lg flex justify-between">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="搜尋站點"
+          className="bg-transparent focus:outline-none"
+        />
+        <FaSearch />
       </div>
     </div>
   );

@@ -1,37 +1,28 @@
-import React, { useState } from "react";
-
+"use client";
 interface SelectCityProps {
   cities: string[];
-  onSelectCity: (selectedCity: string | null) => void;
+  onSelectCity: (city: string | null) => void;
+  searchCity: string;
 }
 
-const SelectCity: React.FC<SelectCityProps> = ({ cities, onSelectCity }) => {
-  const [selectedCity, setSelectedCity] = useState<string | null>(null);
-
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const city = e.target.value;
-    setSelectedCity(city);
-    onSelectCity(city);
-  };
-
+const SelectCity: React.FC<SelectCityProps> = ({
+  cities,
+  onSelectCity,
+  searchCity,
+}) => {
   return (
-    <div className="pl-10">
-      <label>
-        <select
-          value={selectedCity || ""}
-          onChange={handleCityChange}
-          className="border p-2 rounded-md focus:outline-none focus:border-blue-500"
-        >
-          <option value="" disabled>
-            選擇縣市
+    <div className="mb-5 pl-10 w-full ">
+      <select
+        value={searchCity}
+        onChange={(e) => onSelectCity(e.target.value)}
+        className="border bg-slate-100 px-2 py-1.5 rounded-lg font-medium"
+      >
+        {cities.map((city) => (
+          <option key={city} value={city} className="w-full bg-slate-100">
+            {city === searchCity ? city : cities}
           </option>
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
-      </label>
+        ))}
+      </select>
     </div>
   );
 };

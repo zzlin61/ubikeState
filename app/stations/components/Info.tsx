@@ -1,4 +1,3 @@
-// app/stations/Info.tsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -30,7 +29,6 @@ const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
     fetchData();
   }, []);
 
-  // Filter and sort the data based on selected areas and sorting order
   const filteredBikeData = bikeData
     .filter((bike) => selectedAreas.includes(bike.sarea))
     .sort((a, b) => {
@@ -49,13 +47,13 @@ const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
   };
 
   return (
-    <div className="px-10">
+    <div className="sm:px-10">
       {loading ? (
         <p>Loading...</p>
       ) : (
         <div>
           <table className="w-full table-auto border-separate border-spacing-0 rounded-[2rem] border mb-10 ">
-            <thead className="bg-green-500 text-white">
+            <thead className="bg-greenery text-white">
               <tr>
                 <th
                   className="p-5 rounded-tl-[2rem] cursor-pointer"
@@ -102,9 +100,9 @@ const Info: React.FC<InfoProps> = ({ selectedAreas }) => {
                   </td>
                   <td className="p-5">{bike.sarea}</td>
                   <td className="p-5">{bike.sna}</td>
-                  <td className="p-5 text-green-500">{bike.sbi}</td>
+                  <td className="p-5 text-greenery">{bike.sbi}</td>
                   <td
-                    className={`p-5 text-green-500 ${
+                    className={`p-5 text-greenery ${
                       index === filteredBikeData.length - 1
                         ? "rounded-br-[2rem]"
                         : ""
